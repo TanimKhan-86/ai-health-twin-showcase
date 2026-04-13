@@ -1,0 +1,29 @@
+{
+  "users": [
+    {
+      "name": "Tanim",
+      "email": "tanim@example.com",
+      "profilePhotoPath": "/absolute/path/to/tanim-selfie.jpg",
+      "avatarImagePath": "/absolute/path/to/tanim-avatar.png",
+      "animations": {
+        "happy": "/absolute/path/to/tanim-happy.mp4",
+        "sad": "/absolute/path/to/tanim-sad.mp4",
+        "sleepy": "/absolute/path/to/tanim-sleepy.mp4"
+      },
+      "durationSeconds": 5
+    },
+    {
+      "name": "Elora",
+      "email": "elora@example.com",
+      "profilePhotoPath": "/absolute/path/to/elora-selfie.jpg",
+      "avatarImagePath": "/absolute/path/to/elora-avatar.png",
+      "animations": {
+        "happy": "/absolute/path/to/elora-happy.mp4",
+        "sad": "/absolute/path/to/elora-sad.mp4",
+        "sleepy": "/absolute/path/to/elora-sleepy.mp4",
+        "calm": "/absolute/path/to/elora-calm.mp4"
+      },
+      "durationSeconds": 5
+    }
+  ]
+}

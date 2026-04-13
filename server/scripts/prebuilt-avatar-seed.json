@@ -1,0 +1,27 @@
+{
+  "users": [
+    {
+      "name": "Tanim",
+      "email": "tanim.demo@healthtwin.app",
+      "avatarImagePath": "/Users/bosstanim/Downloads/Avatar Fallback Pre generated/Tanim.png",
+      "animations": {
+        "happy": "/Users/bosstanim/Downloads/Avatar Fallback Pre generated/Tanim Happy.mp4",
+        "sad": "/Users/bosstanim/Downloads/Avatar Fallback Pre generated/Tanim Sad.mp4",
+        "sleepy": "/Users/bosstanim/Downloads/Avatar Fallback Pre generated/Tanim Sleepy.mp4"
+      },
+      "durationSeconds": 5
+    },
+    {
+      "name": "Elora",
+      "email": "elora.demo@healthtwin.app",
+      "avatarImagePath": "/Users/bosstanim/Downloads/Avatar Fallback Pre generated/Elora.png",
+      "animations": {
+        "happy": "/Users/bosstanim/Downloads/Avatar Fallback Pre generated/Elora Happy.mp4",
+        "sad": "/Users/bosstanim/Downloads/Avatar Fallback Pre generated/Elora Sad.mp4",
+        "sleepy": "/Users/bosstanim/Downloads/Avatar Fallback Pre generated/Elora Sleepy.mp4",
+        "calm": "/Users/bosstanim/Downloads/Avatar Fallback Pre generated/Elora Calm.mp4"
+      },
+      "durationSeconds": 5
+    }
+  ]
+}
