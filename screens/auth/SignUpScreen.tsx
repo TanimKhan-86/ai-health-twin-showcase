@@ -6,7 +6,7 @@ import { Button } from "../../components/ui/Button";
 import { Heart, ArrowLeft, Check, Camera, Upload } from "lucide-react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from "../../contexts/AuthContext";
-import { getToken } from "../../lib/api/client";
+import { apiFetch } from "../../lib/api/client";
 import type { AppScreenProps } from "../../lib/navigation/types";
 
 export default function SignUpScreen({ navigation }: AppScreenProps<'SignUp'>) {
@@ -74,8 +74,6 @@ export default function SignUpScreen({ navigation }: AppScreenProps<'SignUp'>) {
     };
 
     const uploadProfileImage = async (photoUri: string, mimeType?: string | null) => {
-        const token = await getToken();
-        const apiUrl = process.env.EXPO_PUBLIC_API_URL || "http://localhost:4000";
         const formData = new FormData();
 
         if (photoUri.startsWith("data:") || photoUri.startsWith("blob:")) {
@@ -90,23 +88,13 @@ export default function SignUpScreen({ navigation }: AppScreenProps<'SignUp'>) {
             } as unknown as Blob);
         }
 
-        const response = await fetch(`${apiUrl}/api/avatar/setup`, {
+        const response = await apiFetch<{ message?: string }>('/api/avatar/setup', {
             method: "POST",
-            headers: {
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            },
             body: formData,
         });
 
-        let payload: { success?: boolean; error?: string } | null = null;
-        try {
-            payload = (await response.json()) as { success?: boolean; error?: string };
-        } catch {
-            // keep null payload; status fallback below
-        }
-
-        if (!response.ok || payload?.success === false) {
-            throw new Error(payload?.error || `Photo upload failed (${response.status})`);
+        if (!response.success) {
+            throw new Error(response.error || "Photo upload failed");
         }
     };
 

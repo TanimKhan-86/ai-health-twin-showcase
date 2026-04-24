@@ -4,7 +4,7 @@ import { ScreenLayout } from "../../components/ScreenLayout";
 import { ArrowLeft, CheckCircle, UploadCloud, Camera } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from 'expo-image-picker';
-import { apiFetch, getToken } from "../../lib/api/client";
+import { apiFetch } from "../../lib/api/client";
 import { useToast } from "../../components/ui/Toast";
 import { useAuth } from "../../contexts/AuthContext";
 import type { AppScreenProps } from "../../lib/navigation/types";
@@ -66,10 +66,13 @@ export default function AvatarSetupScreen({ navigation }: AppScreenProps<'Avatar
         setLoading(true);
 
         try {
-            const token = await getToken();
-            const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:4000';
             const usingProfileImageFallback = !photoUri;
-            let res: Response;
+            let response: ApiEnvelope<{
+                message?: string;
+                mode?: 'prebuilt' | 'nanobana';
+                ready?: boolean;
+                requiredStates?: string[];
+            }>;
 
             if (photoUri) {
                 const formData = new FormData();
@@ -87,44 +90,32 @@ export default function AvatarSetupScreen({ navigation }: AppScreenProps<'Avatar
                     } as unknown as Blob);
                 }
 
-                res = await fetch(`${API_URL}/api/avatar/setup`, {
-                    method: 'POST',
-                    headers: {
-                        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                    },
-                    body: formData,
-                });
-            } else {
-                // No upload provided: backend will use the user's saved profileImage.
-                res = await fetch(`${API_URL}/api/avatar/setup`, {
-                    method: 'POST',
-                    headers: {
-                        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                    },
-                });
-            }
-
-            let data: ApiEnvelope<{
-                message?: string;
-                mode?: 'prebuilt' | 'nanobana';
-                ready?: boolean;
-                requiredStates?: string[];
-            }> | null = null;
-            try {
-                data = (await res.json()) as ApiEnvelope<{
+                response = await apiFetch<{
                     message?: string;
                     mode?: 'prebuilt' | 'nanobana';
                     ready?: boolean;
                     requiredStates?: string[];
-                }>;
-            } catch {
-                throw new Error(`Avatar setup failed (${res.status})`);
+                }>('/api/avatar/setup', {
+                    method: 'POST',
+                    body: formData,
+                });
+            } else {
+                // No upload provided: backend will use the user's saved profileImage.
+                response = await apiFetch<{
+                    message?: string;
+                    mode?: 'prebuilt' | 'nanobana';
+                    ready?: boolean;
+                    requiredStates?: string[];
+                }>('/api/avatar/setup', {
+                    method: 'POST',
+                });
             }
-            if (!res.ok || !data || !data.success) {
-                const errorMessage = data && !data.success ? data.error : `Avatar setup failed (${res.status})`;
-                throw new Error(errorMessage);
+
+            if (!response.success) {
+                throw new Error(response.error || 'Avatar setup failed');
             }
-            const payload = data.data;
+
+            const payload = response.data;
 
             const backendMessage = payload?.message || '';
             showToast(

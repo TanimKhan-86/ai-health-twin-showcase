@@ -45,3 +45,4 @@ yarn-error.*
 .env.local
 server/.env
 server/.env.local
+.vercel
