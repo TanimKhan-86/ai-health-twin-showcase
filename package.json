@@ -7,6 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "build:web": "expo export --platform web --clear",
     "lint": "npm run lint:app && npm run lint:server",
     "lint:app": "tsc --noEmit --pretty false",
     "lint:server": "npm run lint --prefix server",
@@ -43,7 +44,7 @@
     "react-native-svg": "15.12.1",
     "react-native-web": "^0.21.0",
     "react-native-worklets": "npm:react-native-worklets-core@^1.6.2",
-    "react-native-worklets-core": "0.5.1",
+    "react-native-worklets-core": "^1.6.2",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^3.4.19"
   },
