@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { appTheme, gradients } from '../../lib/theme/tokens';
@@ -12,6 +12,9 @@ interface PageHeaderProps {
     rightSlot?: React.ReactNode;
     gradientColors?: [string, string] | [string, string, string];
     containerStyle?: ViewStyle;
+    compact?: boolean;
+    titleStyle?: TextStyle;
+    subtitleStyle?: TextStyle;
 }
 
 export function PageHeader({
@@ -22,10 +25,13 @@ export function PageHeader({
     rightSlot,
     gradientColors = gradients.primaryHeader,
     containerStyle,
+    compact = false,
+    titleStyle,
+    subtitleStyle,
 }: PageHeaderProps) {
     return (
-        <LinearGradient colors={gradientColors} style={[styles.header, containerStyle]}>
-            <View style={styles.topRow}>
+        <LinearGradient colors={gradientColors} style={[styles.header, compact ? styles.headerCompact : undefined, containerStyle]}>
+            <View style={[styles.topRow, compact ? styles.topRowCompact : undefined]}>
                 {onBack ? (
                     <TouchableOpacity onPress={onBack} style={styles.backBtn}>
                         <ArrowLeft color="#fff" size={18} />
@@ -34,8 +40,8 @@ export function PageHeader({
                 ) : <View />}
                 {rightSlot ? <View style={styles.rightSlot}>{rightSlot}</View> : null}
             </View>
-            <Text style={styles.title}>{title}</Text>
-            {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+            <Text style={[styles.title, compact ? styles.titleCompact : undefined, titleStyle]}>{title}</Text>
+            {subtitle ? <Text style={[styles.subtitle, compact ? styles.subtitleCompact : undefined, subtitleStyle]}>{subtitle}</Text> : null}
         </LinearGradient>
     );
 }
@@ -48,12 +54,20 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: appTheme.radius.xl,
         borderBottomRightRadius: appTheme.radius.xl,
     },
+    headerCompact: {
+        paddingTop: 10,
+        paddingBottom: 16,
+    },
     topRow: {
         minHeight: 36,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: appTheme.spacing.md,
+    },
+    topRowCompact: {
+        minHeight: 24,
+        marginBottom: 8,
     },
     backBtn: {
         flexDirection: 'row',
@@ -75,10 +89,17 @@ const styles = StyleSheet.create({
         ...appTheme.typography.h1,
         color: '#fff',
     },
+    titleCompact: {
+        fontSize: 23,
+        letterSpacing: -0.2,
+    },
     subtitle: {
         marginTop: appTheme.spacing.xs,
         ...appTheme.typography.caption,
         color: 'rgba(255,255,255,0.85)',
+    },
+    subtitleCompact: {
+        marginTop: 2,
     },
     rightSlot: {
         flexDirection: 'row',

@@ -9,6 +9,12 @@ import type { AppScreenProps } from '../../lib/navigation/types';
 import type { AiWeeklyAnalysisDto } from '../../lib/api/contracts';
 
 type AIAnalysis = AiWeeklyAnalysisDto;
+const INSIGHT_GREEN = '#39b37a';
+const INSIGHT_GREEN_DEEP = '#248b5c';
+const INSIGHT_GREEN_DARK = '#1e6947';
+const INSIGHT_GREEN_SOFT = '#edf9f3';
+const INSIGHT_GREEN_BORDER = '#caecd9';
+const INSIGHT_GREEN_PANEL = '#def4e7';
 
 function formatGeneratedAt(value: string | null): string {
     if (!value) return '—';
@@ -74,7 +80,7 @@ export default function AIWeeklyAnalysisScreen({ navigation }: AppScreenProps<'A
         <ScreenLayout gradientBackground>
             <View style={{ flex: 1 }}>
                 {/* Gradient Header */}
-                <LinearGradient colors={["#7c3aed", "#6d28d9"]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.headerGrad}>
+                <LinearGradient colors={[INSIGHT_GREEN, INSIGHT_GREEN_DEEP]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.headerGrad}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
                         <ArrowLeft color="white" size={18} />
                         <Text style={styles.backText}>Back</Text>
@@ -88,7 +94,7 @@ export default function AIWeeklyAnalysisScreen({ navigation }: AppScreenProps<'A
                     {/* Loading */}
                     {loading && !analysis && (
                         <View style={styles.stateCard}>
-                            <ActivityIndicator size="large" color="#7c3aed" />
+                            <ActivityIndicator size="large" color={INSIGHT_GREEN_DEEP} />
                             <Text style={styles.stateTitle}>Analysing your week...</Text>
                             <Text style={styles.stateSub}>Reviewing {healthCount > 0 ? `${healthCount} days` : 'your'} of health data</Text>
                             <View style={styles.progressBar}><View style={styles.progressFill} /></View>
@@ -102,7 +108,7 @@ export default function AIWeeklyAnalysisScreen({ navigation }: AppScreenProps<'A
                             <Text style={styles.errorTitle}>Analysis Unavailable</Text>
                             <Text style={styles.stateSub}>{error}</Text>
                             <TouchableOpacity onPress={fetchAnalysis} activeOpacity={0.85}>
-                                <LinearGradient colors={["#7c3aed", "#6d28d9"]} style={styles.retryBtn}>
+                                <LinearGradient colors={[INSIGHT_GREEN, INSIGHT_GREEN_DEEP]} style={styles.retryBtn}>
                                     <Text style={styles.retryText}>Try Again</Text>
                                 </LinearGradient>
                             </TouchableOpacity>
@@ -121,7 +127,7 @@ export default function AIWeeklyAnalysisScreen({ navigation }: AppScreenProps<'A
                                 <Text style={styles.generatedAtText}>Last generated: {formatGeneratedAt(lastGeneratedAt)}</Text>
                                 {loading && (
                                     <View style={styles.refreshingBadge}>
-                                        <ActivityIndicator size="small" color="#7c3aed" />
+                                        <ActivityIndicator size="small" color={INSIGHT_GREEN_DEEP} />
                                         <Text style={styles.refreshingText}>Refreshing analysis...</Text>
                                     </View>
                                 )}
@@ -137,8 +143,8 @@ export default function AIWeeklyAnalysisScreen({ navigation }: AppScreenProps<'A
                             {/* Narrative */}
                             <View style={styles.card}>
                                 <View style={styles.cardHeader}>
-                                    <View style={[styles.cardIconWrap, { backgroundColor: '#f5f3ff' }]}>
-                                        <Sparkles size={18} color="#7c3aed" />
+                                    <View style={[styles.cardIconWrap, { backgroundColor: INSIGHT_GREEN_SOFT }]}>
+                                        <Sparkles size={18} color={INSIGHT_GREEN_DEEP} />
                                     </View>
                                     <Text style={styles.cardTitle}>Your Week in Review</Text>
                                 </View>
@@ -167,7 +173,7 @@ export default function AIWeeklyAnalysisScreen({ navigation }: AppScreenProps<'A
 
                             {/* Outcome */}
                             <TouchableOpacity activeOpacity={0.95}>
-                                <LinearGradient colors={["#7c3aed", "#6d28d9"]} style={styles.outcomeCard}>
+                                <LinearGradient colors={[INSIGHT_GREEN, INSIGHT_GREEN_DEEP]} style={styles.outcomeCard}>
                                     <View style={styles.cardHeader}>
                                         <View style={[styles.cardIconWrap, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
                                             <TrendingUp size={18} color="#fff" />
@@ -185,7 +191,7 @@ export default function AIWeeklyAnalysisScreen({ navigation }: AppScreenProps<'A
 
                             {/* Refresh */}
                             <TouchableOpacity onPress={fetchAnalysis} style={styles.refreshBtn} activeOpacity={0.8}>
-                                <RefreshCw size={16} color="#7c3aed" />
+                                <RefreshCw size={16} color={INSIGHT_GREEN_DEEP} />
                                 <Text style={styles.refreshText}>Regenerate Analysis</Text>
                             </TouchableOpacity>
                         </>
@@ -205,42 +211,42 @@ const styles = StyleSheet.create({
 
     scroll: { padding: 16, paddingTop: 4, paddingBottom: 60 },
 
-    stateCard: { backgroundColor: '#fff', borderRadius: 24, padding: 32, alignItems: 'center', gap: 12, marginTop: 8, shadowColor: '#7c3aed', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 16, elevation: 4 },
-    stateTitle: { fontSize: 17, fontWeight: '700', color: '#1e1b4b' },
+    stateCard: { backgroundColor: '#fff', borderRadius: 24, padding: 32, alignItems: 'center', gap: 12, marginTop: 8, shadowColor: INSIGHT_GREEN, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 16, elevation: 4 },
+    stateTitle: { fontSize: 17, fontWeight: '700', color: '#1f2340' },
     stateSub: { fontSize: 13, color: '#6b7280', textAlign: 'center', lineHeight: 20 },
-    progressBar: { width: '100%', height: 4, backgroundColor: '#f3f0ff', borderRadius: 4, marginTop: 8 },
-    progressFill: { width: '60%', height: 4, backgroundColor: '#7c3aed', borderRadius: 4 },
+    progressBar: { width: '100%', height: 4, backgroundColor: INSIGHT_GREEN_PANEL, borderRadius: 4, marginTop: 8 },
+    progressFill: { width: '60%', height: 4, backgroundColor: INSIGHT_GREEN_DEEP, borderRadius: 4 },
     errorIconWrap: { width: 64, height: 64, borderRadius: 32, backgroundColor: '#fef2f2', alignItems: 'center', justifyContent: 'center' },
     errorTitle: { fontSize: 17, fontWeight: '700', color: '#ef4444' },
     retryBtn: { borderRadius: 16, paddingHorizontal: 32, paddingVertical: 14, marginTop: 4 },
     retryText: { color: '#fff', fontWeight: '700', fontSize: 15 },
 
     metaStack: { alignItems: 'center', marginBottom: 12, gap: 6 },
-    sourceBadge: { alignSelf: 'center', backgroundColor: '#f5f3ff', borderRadius: 20, paddingHorizontal: 16, paddingVertical: 6, borderWidth: 1, borderColor: '#e9d5ff' },
-    sourceBadgeText: { fontSize: 12, color: '#7c3aed', fontWeight: '600' },
+    sourceBadge: { alignSelf: 'center', backgroundColor: INSIGHT_GREEN_SOFT, borderRadius: 20, paddingHorizontal: 16, paddingVertical: 6, borderWidth: 1, borderColor: INSIGHT_GREEN_BORDER },
+    sourceBadgeText: { fontSize: 12, color: INSIGHT_GREEN_DEEP, fontWeight: '600' },
     generatedAtText: { fontSize: 12, color: '#6b7280', fontWeight: '500' },
-    refreshingBadge: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#ede9fe', borderRadius: 14, paddingHorizontal: 10, paddingVertical: 6 },
-    refreshingText: { fontSize: 12, fontWeight: '600', color: '#6d28d9' },
+    refreshingBadge: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: INSIGHT_GREEN_PANEL, borderRadius: 14, paddingHorizontal: 10, paddingVertical: 6 },
+    refreshingText: { fontSize: 12, fontWeight: '600', color: INSIGHT_GREEN_DARK },
     inlineError: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#fef2f2', borderColor: '#fecaca', borderWidth: 1, borderRadius: 14, paddingHorizontal: 12, paddingVertical: 10, marginBottom: 12 },
     inlineErrorText: { flex: 1, color: '#b91c1c', fontSize: 12, lineHeight: 18, fontWeight: '500' },
 
-    card: { backgroundColor: '#fff', borderRadius: 20, padding: 20, marginBottom: 12, shadowColor: '#7c3aed', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 12, elevation: 3, borderWidth: 1, borderColor: '#f3f0ff' },
+    card: { backgroundColor: '#fff', borderRadius: 20, padding: 20, marginBottom: 12, shadowColor: INSIGHT_GREEN, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 12, elevation: 3, borderWidth: 1, borderColor: INSIGHT_GREEN_PANEL },
     cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 14 },
     cardIconWrap: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
-    cardTitle: { fontSize: 15, fontWeight: '700', color: '#1e1b4b' },
-    narrativeBox: { backgroundColor: '#f5f3ff', borderRadius: 14, padding: 16, borderLeftWidth: 3, borderLeftColor: '#7c3aed' },
-    narrativeText: { color: '#4c1d95', fontSize: 14, lineHeight: 22, fontStyle: 'italic' },
+    cardTitle: { fontSize: 15, fontWeight: '700', color: '#1f2340' },
+    narrativeBox: { backgroundColor: INSIGHT_GREEN_SOFT, borderRadius: 14, padding: 16, borderLeftWidth: 3, borderLeftColor: INSIGHT_GREEN_DEEP },
+    narrativeText: { color: INSIGHT_GREEN_DARK, fontSize: 14, lineHeight: 22, fontStyle: 'italic' },
     tipRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, marginBottom: 12 },
-    tipBadge: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#7c3aed', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+    tipBadge: { width: 28, height: 28, borderRadius: 14, backgroundColor: INSIGHT_GREEN_DEEP, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
     tipNum: { color: '#fff', fontWeight: '800', fontSize: 12 },
     tipText: { flex: 1, color: '#374151', fontSize: 14, lineHeight: 21 },
 
-    outcomeCard: { borderRadius: 20, padding: 20, marginBottom: 12, shadowColor: '#7c3aed', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 5 },
+    outcomeCard: { borderRadius: 20, padding: 20, marginBottom: 12, shadowColor: INSIGHT_GREEN, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 5 },
     outcomeText: { color: 'rgba(255,255,255,0.9)', fontSize: 14, lineHeight: 22, fontWeight: '500' },
 
-    disclaimerBox: { backgroundColor: '#fff', borderRadius: 14, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#f3f0ff' },
+    disclaimerBox: { backgroundColor: '#fff', borderRadius: 14, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: INSIGHT_GREEN_PANEL },
     disclaimerText: { color: '#9ca3af', fontSize: 11, textAlign: 'center', lineHeight: 17 },
 
-    refreshBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: '#f5f3ff', borderRadius: 16, paddingVertical: 14, borderWidth: 1.5, borderColor: '#e9d5ff' },
-    refreshText: { color: '#7c3aed', fontWeight: '700', fontSize: 14 },
+    refreshBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: INSIGHT_GREEN_SOFT, borderRadius: 16, paddingVertical: 14, borderWidth: 1.5, borderColor: INSIGHT_GREEN_BORDER },
+    refreshText: { color: INSIGHT_GREEN_DEEP, fontWeight: '700', fontSize: 14 },
 });

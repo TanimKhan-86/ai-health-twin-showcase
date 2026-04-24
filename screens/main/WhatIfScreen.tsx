@@ -38,6 +38,12 @@ const WEB_VIDEO_STYLE: React.CSSProperties = {
     top: 0,
     left: 0,
 };
+const SCENARIO_BLUE = '#39B8FF';
+const SCENARIO_BLUE_DEEP = '#2f7ddf';
+const SCENARIO_BLUE_DARK = '#1f5ebd';
+const SCENARIO_BLUE_SOFT = '#edf8ff';
+const SCENARIO_BLUE_SHELL = '#dff2ff';
+const SCENARIO_BLUE_BORDER = '#c7e7ff';
 
 export default function WhatIfScreen({ navigation }: AppScreenProps<'WhatIf'>) {
     const [loading, setLoading] = useState(true);
@@ -151,8 +157,8 @@ export default function WhatIfScreen({ navigation }: AppScreenProps<'WhatIf'>) {
         maxValue: 100,
         noOfSections: chartTheme.sections,
         areaChart: true,
-        startFillColor: "#7c3aed",
-        endFillColor: "#f5f3ff",
+        startFillColor: SCENARIO_BLUE,
+        endFillColor: SCENARIO_BLUE_SOFT,
         startOpacity: 0.18,
         endOpacity: 0.04,
         animationDuration: 850,
@@ -308,6 +314,7 @@ export default function WhatIfScreen({ navigation }: AppScreenProps<'WhatIf'>) {
                     title="Scenario Explorer"
                     subtitle="See how lifestyle changes affect you"
                     onBack={() => navigation.goBack()}
+                    gradientColors={[SCENARIO_BLUE, SCENARIO_BLUE_DEEP]}
                 />
 
                 <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -317,7 +324,7 @@ export default function WhatIfScreen({ navigation }: AppScreenProps<'WhatIf'>) {
                         <View style={{ alignItems: 'center', marginVertical: 10 }}>
                             <View style={styles.avatarPreviewShell}>
                                 {avatarLoading && !previewVideoUrl && !avatarImageUrl ? (
-                                    <ActivityIndicator size="small" color="#7c3aed" />
+                                    <ActivityIndicator size="small" color={SCENARIO_BLUE_DEEP} />
                                 ) : previewVideoUrl && !avatarVideoFailed ? (
                                     Platform.OS === 'web' ? (
                                         <video
@@ -384,7 +391,7 @@ export default function WhatIfScreen({ navigation }: AppScreenProps<'WhatIf'>) {
                         <View style={styles.cardHeader}>
                             <Text style={styles.cardTitle}>Adjust Habits</Text>
                             <TouchableOpacity onPress={resetSimulation} style={styles.resetBtn}>
-                                <RefreshCw size={14} color="#7c3aed" />
+                                <RefreshCw size={14} color={SCENARIO_BLUE_DEEP} />
                                 <Text style={styles.resetText}>Reset</Text>
                             </TouchableOpacity>
                         </View>
@@ -628,7 +635,7 @@ export default function WhatIfScreen({ navigation }: AppScreenProps<'WhatIf'>) {
                         <SectionCard style={styles.card}>
                         <View style={styles.forecastHeader}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                                <View style={[styles.iconWrap, { backgroundColor: '#f5f3ff' }]}><TrendingUp size={16} color="#7c3aed" /></View>
+                                <View style={[styles.iconWrap, { backgroundColor: SCENARIO_BLUE_SOFT }]}><TrendingUp size={16} color={SCENARIO_BLUE_DEEP} /></View>
                                 <Text style={styles.cardTitle}>30-Day Energy Forecast</Text>
                             </View>
                             <View style={{ alignItems: 'flex-end' }}>
@@ -642,7 +649,7 @@ export default function WhatIfScreen({ navigation }: AppScreenProps<'WhatIf'>) {
                         <View style={{ marginLeft: -10, marginTop: 10, height: 200 }}>
                             <LineChart
                                 data={chartData}
-                                color="#7c3aed"
+                                color={SCENARIO_BLUE_DEEP}
                                 {...forecastChartProps}
                             />
                         </View>
@@ -666,31 +673,31 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         borderWidth: 3,
         borderColor: '#fff',
-        backgroundColor: '#ede9fe',
+        backgroundColor: SCENARIO_BLUE_SHELL,
         alignItems: 'center',
         justifyContent: 'center',
     },
     nativeVideo: { width: '100%', height: '100%' },
     avatarFallbackText: {
-        color: '#6d28d9',
+        color: SCENARIO_BLUE_DARK,
         fontSize: 11,
         fontWeight: '700',
         textAlign: 'center',
         paddingHorizontal: 14,
     },
     moodBadge: {
-        backgroundColor: '#f5f3ff',
+        backgroundColor: SCENARIO_BLUE_SOFT,
         paddingHorizontal: 16,
         paddingVertical: 6,
         borderRadius: 16,
         borderWidth: 1,
-        borderColor: '#ddd6fe',
+        borderColor: SCENARIO_BLUE_BORDER,
         marginTop: 14,
         marginBottom: 12,
     },
-    moodText: { color: '#6d28d9', fontWeight: '800', fontSize: 15 },
+    moodText: { color: SCENARIO_BLUE_DARK, fontWeight: '800', fontSize: 15 },
     playbackStateText: {
-        color: '#5b21b6',
+        color: SCENARIO_BLUE_DARK,
         fontSize: 11,
         fontWeight: '700',
         marginBottom: 6,
@@ -708,16 +715,16 @@ const styles = StyleSheet.create({
     dataConfidenceInline: { fontSize: 11, fontWeight: '700', marginBottom: 8 },
     whyPanel: {
         width: '100%',
-        backgroundColor: '#f8f7ff',
-        borderColor: '#ddd6fe',
+        backgroundColor: '#f5fbff',
+        borderColor: SCENARIO_BLUE_BORDER,
         borderWidth: 1,
         borderRadius: 12,
         paddingHorizontal: 12,
         paddingVertical: 10,
         marginBottom: 10,
     },
-    whyTitle: { color: '#5b21b6', fontSize: 12, fontWeight: '800', marginBottom: 5 },
-    whyRule: { color: '#6d28d9', fontSize: 11, fontWeight: '700' },
+    whyTitle: { color: SCENARIO_BLUE_DARK, fontSize: 12, fontWeight: '800', marginBottom: 5 },
+    whyRule: { color: SCENARIO_BLUE_DEEP, fontSize: 11, fontWeight: '700' },
     whyMatch: { color: '#4b5563', fontSize: 11, marginTop: 4, fontWeight: '600' },
     whyValues: { color: '#6b7280', fontSize: 11, marginTop: 4, fontWeight: '600' },
     narrativeText: {
@@ -735,21 +742,21 @@ const styles = StyleSheet.create({
         marginBottom: 18,
         paddingBottom: 12,
         borderBottomWidth: 1,
-        borderBottomColor: '#ede9fe',
+        borderBottomColor: SCENARIO_BLUE_BORDER,
     },
     cardTitle: { ...appTheme.typography.h3, fontWeight: '800', color: appTheme.colors.textPrimary },
     resetBtn: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 6,
-        backgroundColor: '#f5f3ff',
+        backgroundColor: SCENARIO_BLUE_SOFT,
         borderWidth: 1,
-        borderColor: '#ddd6fe',
+        borderColor: SCENARIO_BLUE_BORDER,
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 12,
     },
-    resetText: { ...appTheme.typography.caption, color: appTheme.colors.brandDark, fontWeight: '700' },
+    resetText: { ...appTheme.typography.caption, color: SCENARIO_BLUE_DARK, fontWeight: '700' },
     controlGroup: { paddingVertical: 8 },
     controlRow: {
         flexDirection: 'row',
@@ -777,7 +784,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         marginTop: 10,
     },
-    guardrailPanelHigh: { backgroundColor: '#f5f3ff', borderColor: '#ddd6fe' },
+    guardrailPanelHigh: { backgroundColor: SCENARIO_BLUE_SOFT, borderColor: SCENARIO_BLUE_BORDER },
     guardrailPanelMedium: { backgroundColor: '#fff7ed', borderColor: '#fed7aa' },
     guardrailPanelLow: { backgroundColor: '#fef2f2', borderColor: '#fecaca' },
     guardrailHeader: {
@@ -809,13 +816,13 @@ const styles = StyleSheet.create({
     compareHint: { color: appTheme.colors.textSecondary, fontSize: 12, marginTop: -2, marginBottom: 14, lineHeight: 18, fontWeight: '500' },
     compareTable: {
         borderWidth: 1,
-        borderColor: '#e9e5ff',
+        borderColor: '#d7edf9',
         borderRadius: 14,
         overflow: 'hidden',
         backgroundColor: '#fff',
     },
-    compareTableRow: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#ede9fe', minHeight: 46 },
-    compareTableHeaderRow: { borderTopWidth: 0, backgroundColor: '#f5f3ff' },
+    compareTableRow: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: SCENARIO_BLUE_BORDER, minHeight: 46 },
+    compareTableHeaderRow: { borderTopWidth: 0, backgroundColor: SCENARIO_BLUE_SOFT },
     compareTableRowLast: {},
     compareMetricCell: {
         flex: 1,
@@ -823,9 +830,9 @@ const styles = StyleSheet.create({
         paddingVertical: 9,
         justifyContent: 'center',
         borderRightWidth: 1,
-        borderRightColor: '#ede9fe',
+        borderRightColor: SCENARIO_BLUE_BORDER,
     },
-    compareMetricHeaderCell: { backgroundColor: '#f5f3ff' },
+    compareMetricHeaderCell: { backgroundColor: SCENARIO_BLUE_SOFT },
     compareValueCell: {
         flex: 1,
         paddingHorizontal: 8,
@@ -833,17 +840,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRightWidth: 1,
-        borderRightColor: '#ede9fe',
+        borderRightColor: SCENARIO_BLUE_BORDER,
     },
-    compareBaselineValueCell: { backgroundColor: '#f5f3ff' },
+    compareBaselineValueCell: { backgroundColor: SCENARIO_BLUE_SOFT },
     compareHeaderCell: {},
-    compareHeaderText: { color: appTheme.colors.brandDark, fontWeight: '800', fontSize: 11, textAlign: 'center' },
-    compareHeaderSubText: { color: appTheme.colors.brand, fontWeight: '700', fontSize: 10, textAlign: 'center', marginTop: 2 },
+    compareHeaderText: { color: SCENARIO_BLUE_DARK, fontWeight: '800', fontSize: 11, textAlign: 'center' },
+    compareHeaderSubText: { color: SCENARIO_BLUE_DEEP, fontWeight: '700', fontSize: 10, textAlign: 'center', marginTop: 2 },
     compareMetricLabel: { color: appTheme.colors.textSecondary, fontWeight: '700', fontSize: 12 },
     compareCellPrimary: { color: '#1f2937', fontWeight: '800', fontSize: 15, lineHeight: 18 },
     compareCellSecondary: { color: appTheme.colors.textSecondary, fontWeight: '600', fontSize: 10, marginTop: 2, textAlign: 'center' },
     compareCellText: { color: appTheme.colors.textPrimary, fontWeight: '700', fontSize: 11, textAlign: 'center' },
-    divider: { height: 1, backgroundColor: '#ede9fe', marginVertical: 8 },
+    divider: { height: 1, backgroundColor: SCENARIO_BLUE_BORDER, marginVertical: 8 },
     forecastHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',

@@ -76,6 +76,7 @@ function getAuraPresetForState(rawState: string | null): AuraPreset {
 
 interface DigitalTwinAvatarProps {
     showStateLabel?: boolean;
+    presentation?: 'card' | 'bare';
 }
 
 function getStateLabel(rawState: string | null): string | null {
@@ -90,7 +91,7 @@ function getStateLabel(rawState: string | null): string | null {
     return state.charAt(0).toUpperCase() + state.slice(1);
 }
 
-export function DigitalTwinAvatar({ showStateLabel = false }: DigitalTwinAvatarProps) {
+export function DigitalTwinAvatar({ showStateLabel = false, presentation = 'card' }: DigitalTwinAvatarProps) {
     const { user } = useAuth();
     const [loading, setLoading] = useState(true);
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -104,6 +105,7 @@ export function DigitalTwinAvatar({ showStateLabel = false }: DigitalTwinAvatarP
     const videoCacheRef = useRef<Record<string, string>>({});
     const prefetchingStatesRef = useRef<Set<string>>(new Set());
     const activeUserIdRef = useRef<string | null>(null);
+    const webVideoRef = useRef<any>(null);
 
     useEffect(() => {
         // Audio API is native-only — skip on web to prevent crash
@@ -365,17 +367,62 @@ export function DigitalTwinAvatar({ showStateLabel = false }: DigitalTwinAvatarP
         return () => clearInterval(interval);
     }, [fetchState]);
 
+    useEffect(() => {
+        if (Platform.OS !== 'web') return;
+        if (!videoUrl || videoFailed) return;
+        const node = webVideoRef.current;
+        if (!node || typeof node.play !== 'function') return;
+
+        node.muted = true;
+        node.defaultMuted = true;
+        node.playsInline = true;
+
+        const tryPlay = () => {
+            try {
+                const maybePromise = node.play();
+                if (maybePromise && typeof maybePromise.catch === 'function') {
+                    maybePromise.catch(() => {
+                        // Keep the element mounted; some browsers need another readiness event.
+                    });
+                }
+            } catch {
+                // Ignore autoplay timing issues and let later readiness events retry.
+            }
+        };
+
+        if (typeof node.readyState === 'number' && node.readyState >= 2) {
+            tryPlay();
+            return;
+        }
+
+        const handleCanPlay = () => {
+            tryPlay();
+        };
+
+        node.addEventListener('canplay', handleCanPlay);
+        return () => {
+            node.removeEventListener('canplay', handleCanPlay);
+        };
+    }, [videoUrl, videoFailed]);
+
+    const isBare = presentation === 'bare';
     const renderGlassCard = (children: React.ReactNode) => (
-        <View style={styles.root}>
-            <LinearGradient
-                colors={['rgba(255,255,255,0.78)', 'rgba(255,255,255,0.56)']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.glassCard}
-            >
-                <View style={styles.glassSheen} />
-                {children}
-            </LinearGradient>
+        <View style={[styles.root, isBare && styles.rootBare]}>
+            {isBare ? (
+                <View style={[styles.glassCard, styles.glassCardBare]}>
+                    {children}
+                </View>
+            ) : (
+                <LinearGradient
+                    colors={['rgba(255,255,255,0.78)', 'rgba(255,255,255,0.56)']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.glassCard}
+                >
+                    <View style={styles.glassSheen} />
+                    {children}
+                </LinearGradient>
+            )}
         </View>
     );
 
@@ -433,13 +480,37 @@ export function DigitalTwinAvatar({ showStateLabel = false }: DigitalTwinAvatarP
                     <View style={[styles.videoFrame, { backgroundColor: auraPreset.frameBg }]}>
                         {videoUrl && !videoFailed ? (Platform.OS === 'web' ? (
                             <video
+                                key={videoUrl}
+                                ref={(node) => {
+                                    webVideoRef.current = node;
+                                }}
                                 src={videoUrl}
                                 autoPlay
                                 loop
                                 muted
                                 playsInline
+                                preload="auto"
+                                crossOrigin="anonymous"
                                 onError={() => setVideoFailed(true)}
-                                onLoadedData={() => setVideoFailed(false)}
+                                onLoadedData={() => {
+                                    setVideoFailed(false);
+                                    const node = webVideoRef.current;
+                                    if (node && typeof node.play === 'function') {
+                                        const maybePromise = node.play();
+                                        if (maybePromise && typeof maybePromise.catch === 'function') {
+                                            maybePromise.catch(() => undefined);
+                                        }
+                                    }
+                                }}
+                                onCanPlay={() => {
+                                    const node = webVideoRef.current;
+                                    if (node && typeof node.play === 'function') {
+                                        const maybePromise = node.play();
+                                        if (maybePromise && typeof maybePromise.catch === 'function') {
+                                            maybePromise.catch(() => undefined);
+                                        }
+                                    }
+                                }}
                                 style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0 }}
                             />
                         ) : (
@@ -461,11 +532,6 @@ export function DigitalTwinAvatar({ showStateLabel = false }: DigitalTwinAvatarP
                         )}
                     </View>
                 </LinearGradient>
-                {!!imageUrl && !videoUrl && (
-                    <Text className="mt-3 text-center text-xs font-semibold text-slate-500 px-6">
-                        {unavailableDetail || 'Video unavailable for now. Showing avatar image fallback.'}
-                    </Text>
-                )}
                 {showStateLabel && stateLabel && (
                     <Text style={styles.stateLabelText}>
                         {stateLabel}
@@ -488,6 +554,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 14,
         paddingVertical: 10,
     },
+    rootBare: {
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+        width: '100%',
+    },
     glassCard: {
         width: '100%',
         maxWidth: 340,
@@ -503,6 +574,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
+    },
+    glassCardBare: {
+        maxWidth: 380,
+        borderRadius: 0,
+        borderWidth: 0,
+        backgroundColor: 'transparent',
+        shadowOpacity: 0,
+        shadowRadius: 0,
+        shadowOffset: { width: 0, height: 0 },
+        elevation: 0,
+        overflow: 'visible',
     },
     glassSheen: {
         position: 'absolute',
